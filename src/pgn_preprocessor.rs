@@ -61,7 +61,7 @@ impl PgnProcessor {
             return self.parse_piece_move(move_str, piece_type);
         }
 
-        panic!("Invalid piece type");
+        panic!("Invalid piece type, move: {}", move_str);
     }
 
     fn parse_pawn_move(&self, move_str: &str) -> Option<(Square, Square)> {
@@ -203,10 +203,7 @@ impl PgnProcessor {
             'R' => Some(Type::Rook),
             'Q' => Some(Type::Queen),
             'K' => Some(Type::King),
-            _ => {
-                println!("Invalid piece type: {}", c);
-                None
-            }
+            _ => None,
         }
     }
 
@@ -217,10 +214,7 @@ impl PgnProcessor {
             .replace("#", "")
             .replace("1/2-1/2", "")
             .replace("1-0", "")
-            .replace("0-1", "")
-            .split("1.")
-            .skip(1)
-            .collect::<String>();
+            .replace("0-1", "");
 
         let mut result = Vec::new();
 
@@ -230,10 +224,12 @@ impl PgnProcessor {
                 continue;
             }
 
+            println!("{}", token);
+
             if let Some(processed_move) = self.process_move(token) {
                 result.push(processed_move);
             } else {
-                eprintln!("Warning: Could not process move '{}'", token);
+                panic!("Could not process move '{}'", token);
             }
         }
 

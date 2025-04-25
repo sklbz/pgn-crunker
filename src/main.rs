@@ -33,10 +33,8 @@ fn main() -> io::Result<()> {
         pgn
     };
 
-    let pgn = input.split("1.").skip(1).collect::<String>();
-
     let mut processor = PgnProcessor::new();
-    let processed_moves = processor.process_pgn(&pgn);
+    let processed_moves = processor.process_pgn(&input);
 
     println!("Processed moves:");
     for (i, mv) in processed_moves.iter().enumerate() {

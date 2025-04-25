@@ -219,6 +219,10 @@ impl PgnProcessor {
         let mut result = Vec::new();
 
         for token in cleaned_pgn.split_whitespace() {
+            if token == "1." {
+                self.reset();
+            }
+
             // Skip move numbers and game headers
             if token.ends_with('.') || token.starts_with('[') {
                 continue;

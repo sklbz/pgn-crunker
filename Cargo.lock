@@ -5,7 +5,7 @@ version = 4
 [[package]]
 name = "chess"
 version = "0.1.0"
-source = "git+https://github.com/sklbz/chess-board-representation?branch=master#f47cf6f9b57eff7611db3fefe2b13fc212d8e46a"
+source = "git+https://github.com/sklbz/chess-board-representation?branch=master#f297238c2fe6564a21f82f95ad99d94d969c0f85"
 
 [[package]]
 name = "pgn-crunker"

@@ -4,3 +4,4 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+chess = { git = "https://github.com/sklbz/chess-board-representation", branch = "master" }

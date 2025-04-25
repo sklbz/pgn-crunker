@@ -3,5 +3,13 @@
 version = 4
 
 [[package]]
+name = "chess"
+version = "0.1.0"
+source = "git+https://github.com/sklbz/chess-board-representation?branch=master#53295765f9054de087cba1111f5a589e336b4634"
+
+[[package]]
 name = "pgn-crunker"
 version = "0.1.0"
+dependencies = [
+ "chess",
+]

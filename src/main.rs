@@ -3,16 +3,6 @@ use std::fs::File;
 use std::io::{self, BufRead, BufReader, Write};
 use std::path::Path;
 
-mod chess {
-    // Include all your existing chess modules here
-    pub mod bitboard;
-    pub mod bitmask;
-    pub mod board;
-    pub mod legal_moves;
-    pub mod utils;
-    // ... other modules as needed
-}
-
 use chess::board::Board;
 use chess::legal_moves::misc::{Color, Move, Square, Type};
 use chess::utils::{square_to_string, string_to_square};

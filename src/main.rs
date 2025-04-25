@@ -3,8 +3,10 @@ use std::fs::File;
 use std::io::{self, BufRead, BufReader, Write};
 use std::path::Path;
 
+use chess::bitboard::BitBoardGetter;
 use chess::board::Board;
-use chess::legal_moves::misc::{Color, Move, Square, Type};
+use chess::legal_moves::is_move_possible::is_possible;
+use chess::legal_moves::misc::{Color, Square, Type};
 use chess::utils::{square_to_string, string_to_square};
 
 struct PgnProcessor {
@@ -111,7 +113,7 @@ impl PgnProcessor {
             }
 
             let move_tuple = (start_square, target_square);
-            if chess::legal_moves::is_move_possible::is_possible(&self.board, &move_tuple) {
+            if is_possible(&self.board, &move_tuple) {
                 possible_starts.push(start_square);
             }
         }
@@ -179,7 +181,7 @@ impl PgnProcessor {
             }
 
             let move_tuple = (start_square, target_square);
-            if chess::legal_moves::is_move_possible::is_possible(&self.board, &move_tuple) {
+            if is_possible(&self.board, &move_tuple) {
                 possible_starts.push(start_square);
             }
         }

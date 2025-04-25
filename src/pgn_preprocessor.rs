@@ -216,11 +216,12 @@ impl PgnProcessor {
             .replace("1-0", "")
             .replace("0-1", "");
 
-        let mut result = Vec::new();
+        let mut result: Vec<String> = Vec::new();
 
         for token in cleaned_pgn.split_whitespace() {
             if token == "1." {
                 self.reset();
+                result.push("\n".to_string());
             }
 
             // Skip move numbers and game headers

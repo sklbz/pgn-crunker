@@ -22,7 +22,7 @@ impl PgnProcessor {
         self.current_turn = Color::White;
     }
 
-    fn process_move(&mut self, move_str: &str) -> Option<String> {
+    fn process_move(&mut self, move_str: &str, line_index: usize) -> Option<String> {
         // Handle castling
         if move_str == "O-O" || move_str == "O-O-O" {
             self.board.castle(move_str, &self.current_turn);
@@ -44,7 +44,7 @@ impl PgnProcessor {
         let cleaned_move = move_str.trim_end_matches('+').trim_end_matches('#');
 
         // Parse the move
-        if let Some((start, end)) = self.parse_move(cleaned_move) {
+        if let Some((start, end)) = self.parse_move(cleaned_move, line_index) {
             let move_tuple = (start, end);
             if is_possible(&self.board, &move_tuple) {
                 let result = format!("{}{}", square_to_string(start), square_to_string(end));
@@ -57,10 +57,10 @@ impl PgnProcessor {
             }
         }
 
-        panic!("Invalid move: {move_str}");
+        panic!("Invalid move: {move_str}\n at line {line_index}");
     }
 
-    fn parse_move(&self, move_str: &str) -> Option<(Square, Square)> {
+    fn parse_move(&self, move_str: &str, line_index: usize) -> Option<(Square, Square)> {
         // Handle pawn moves (e.g., e4, exd5, e8=Q)
         if move_str.chars().next()?.is_lowercase() {
             return self.parse_pawn_move(move_str);
@@ -71,7 +71,7 @@ impl PgnProcessor {
             return self.parse_piece_move(move_str, piece_type);
         }
 
-        panic!("Invalid piece type, move: {move_str}");
+        panic!("Invalid piece type at line {line_index}, move: {move_str}");
     }
 
     fn parse_pawn_move(&self, move_str: &str) -> Option<(Square, Square)> {
@@ -226,18 +226,13 @@ impl PgnProcessor {
             .replace("1-0", "")
             .replace("0-1", "")
             .lines()
-            .filter(|line| !line.starts_with('['))
+            .filter(|line| !line.is_empty())
             .filter(|line| !line.starts_with("["))
-            .collect::<String>()
-            .split_whitespace()
-            .filter(|token| !token.starts_with('"'))
-            .filter(|token| !token.starts_with('['))
-            .filter(|token| !token.starts_with("["))
             .collect::<String>();
 
         let mut result: Vec<String> = Vec::new();
 
-        for token in cleaned_pgn.split_whitespace() {
+        for (line_index, token) in cleaned_pgn.split_whitespace().enumerate() {
             if token == "1." {
                 self.reset();
                 result.push("\n".to_string());
@@ -250,10 +245,10 @@ impl PgnProcessor {
 
             println!("{token}");
 
-            if let Some(processed_move) = self.process_move(token) {
+            if let Some(processed_move) = self.process_move(token, line_index) {
                 result.push(processed_move);
             } else {
-                panic!("Could not process move '{token}'");
+                panic!("Could not process move '{token}' at line {line_index}");
             }
         }
 

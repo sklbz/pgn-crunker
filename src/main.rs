@@ -1,3 +1,4 @@
+mod pgn_cleaner;
 mod pgn_preprocessor;
 mod test;
 
@@ -41,7 +42,7 @@ fn main() -> io::Result<()> {
         if i % 2 == 0 {
             print!("{}. ", i / 2 + 1);
         }
-        print!("{} ", mv);
+        print!("{mv} ");
         if i % 2 == 1 {
             println!();
         }

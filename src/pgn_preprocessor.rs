@@ -26,8 +26,18 @@ impl PgnProcessor {
         // Handle castling
         if move_str == "O-O" || move_str == "O-O-O" {
             self.board.castle(move_str, &self.current_turn);
+
+            let rank = if self.current_turn == Color::White {
+                "1"
+            } else {
+                "8"
+            };
+            let starting_square = format!("e{rank}");
+            let ending_file = if move_str == "O-O" { "g" } else { "c" };
+            let ending_square = format!("{ending_file}{rank}");
+
             self.current_turn = !self.current_turn;
-            return Some(move_str.to_string());
+            return Some(format!("{starting_square}{ending_square}"));
         }
 
         // Remove check/checkmate symbols
@@ -47,7 +57,7 @@ impl PgnProcessor {
             }
         }
 
-        panic!("Invalid move: {}", move_str);
+        panic!("Invalid move: {move_str}");
     }
 
     fn parse_move(&self, move_str: &str) -> Option<(Square, Square)> {
@@ -61,7 +71,7 @@ impl PgnProcessor {
             return self.parse_piece_move(move_str, piece_type);
         }
 
-        panic!("Invalid piece type, move: {}", move_str);
+        panic!("Invalid piece type, move: {move_str}");
     }
 
     fn parse_pawn_move(&self, move_str: &str) -> Option<(Square, Square)> {
@@ -214,7 +224,16 @@ impl PgnProcessor {
             .replace("#", "")
             .replace("1/2-1/2", "")
             .replace("1-0", "")
-            .replace("0-1", "");
+            .replace("0-1", "")
+            .lines()
+            .filter(|line| !line.starts_with('['))
+            .filter(|line| !line.starts_with("["))
+            .collect::<String>()
+            .split_whitespace()
+            .filter(|token| !token.starts_with('"'))
+            .filter(|token| !token.starts_with('['))
+            .filter(|token| !token.starts_with("["))
+            .collect::<String>();
 
         let mut result: Vec<String> = Vec::new();
 
@@ -229,12 +248,12 @@ impl PgnProcessor {
                 continue;
             }
 
-            println!("{}", token);
+            println!("{token}");
 
             if let Some(processed_move) = self.process_move(token) {
                 result.push(processed_move);
             } else {
-                panic!("Could not process move '{}'", token);
+                panic!("Could not process move '{token}'");
             }
         }
 

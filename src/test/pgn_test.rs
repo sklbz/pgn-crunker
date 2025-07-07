@@ -14,7 +14,7 @@ Kg7 22. Bf6+ N5xf6 23. Qg5 Nh5 24. Rxf7+ 1-0";
         if i % 2 == 0 {
             print!("{}. ", i / 2 + 1);
         }
-        print!("{} ", mv);
+        print!("{mv} ");
         if i % 2 == 1 {
             println!();
         }
